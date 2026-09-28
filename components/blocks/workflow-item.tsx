@@ -67,7 +67,7 @@ const WorkflowItem = ({
               className={cn(
                 "grow font-medium",
                 type === "hub" &&
-                  "font-[family-name:var(--font-sora)] text-base font-semibold",
+                  "font-[family-name:var(--font-sora)] text-xl font-semibold",
               )}
             >
               {title}
