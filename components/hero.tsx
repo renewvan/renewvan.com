@@ -4,14 +4,14 @@ export function Hero() {
   return (
     <div className="min-h-[calc(100svh-4rem)] py-16 max-w-(--breakpoint-xl) mx-auto text-center px-6">
       <strong className="font-semibold text-muted-foreground/90">
-        Open-hardware campervan monitoring
+        Open-source, open-hardware campervan monitoring
       </strong>
       <h1 className="mt-5 max-w-3xl mx-auto text-4xl sm:text-5xl md:text-6xl leading-[1.1] font-semibold tracking-tighter text-balance">
         Know your van, from anywhere
       </h1>
       <div className="mt-8 max-w-3xl mx-auto text-lg text-muted-foreground text-balance">
         <p>
-          renewvan puts your tanks, batteries, and switches on one live
+          <b>renewvan</b> puts your tanks, batteries, and switches on one live
           dashboard — in the van on a touchscreen, or on your phone down the
           street. Vendor-agnostic, open hardware, no subscription.
         </p>

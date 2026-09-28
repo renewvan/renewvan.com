@@ -24,21 +24,21 @@ type Node = {
 const INPUTS: Node[] = [
   {
     icon: Droplets,
-    title: "tank",
+    title: "Tank",
     description:
       "ADS1115 resistive sender: voltage → resistance → level_pct, calibrated per sender.",
     meta: "renewvan/tank/<fresh|grey>/*",
   },
   {
     icon: BatteryCharging,
-    title: "battery",
+    title: "Battery",
     description:
       "Remaps Victron's native Venus OS MQTT feed for the house battery bank — no new sensing.",
     meta: "renewvan/battery/<id>/*",
   },
   {
     icon: ToggleLeft,
-    title: "relay",
+    title: "Relay",
     description:
       "ESP32 running ESPHome firmware, switching a binary on/off load like a light circuit.",
     meta: "renewvan/relay/<id>/state",
@@ -58,14 +58,14 @@ const OUTPUTS: Node[] = [
     icon: MonitorSmartphone,
     title: "Dashboard",
     description:
-      'One responsive app for the 7" in-van kiosk touchscreen and a laptop browser — same live view.',
+      "One responsive app for the in-van kiosk touchscreens and a web browser — same live view!",
     meta: "renewvan/dashboard",
   },
   {
     icon: Smartphone,
     title: "Mobile",
     description:
-      "Read-only phone app, checkable from outside the van without a browser.",
+      "Same live view on your phone — read-only, no browser required, works from outside the van.",
     meta: "renewvan/mobile",
   },
 ];

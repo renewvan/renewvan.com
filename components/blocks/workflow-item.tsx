@@ -42,7 +42,7 @@ const WorkflowItem = ({
           {
             "bg-[color-mix(in_oklab,var(--color-amber-600)20%,var(--background))] text-amber-600 dark:bg-[color-mix(in_oklab,var(--color-amber-400)20%,var(--background))] dark:text-amber-400":
               type === "input",
-            "bg-[color-mix(in_oklab,var(--color-sky-600)20%,var(--background))] text-sky-600 dark:bg-[color-mix(in_oklab,var(--color-sky-400)20%,var(--background))] dark:text-sky-400":
+            "bg-[color-mix(in_oklab,var(--primary)20%,var(--background))] text-primary":
               type === "hub",
             "bg-[color-mix(in_oklab,var(--color-green-600)20%,var(--background))] text-green-600 dark:bg-[color-mix(in_oklab,var(--color-green-400)20%,var(--background))] dark:text-green-400":
               type === "output",
@@ -57,7 +57,7 @@ const WorkflowItem = ({
       <div
         className={cn(
           "bg-card text-card-foreground flex flex-col gap-3.5 rounded-xl border p-4 shadow-lg",
-          type === "hub" && "border-sky-500/40",
+          type === "hub" && "border-primary/40",
         )}
       >
         <div className="flex flex-col gap-2">
