@@ -40,6 +40,11 @@ export const NavMenu = ({
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={triggerStyle}>
+            <Link href="/docs">Docs</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={triggerStyle}>
             <Link href="https://github.com/renewvan">GitHub</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
