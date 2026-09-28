@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RenewVan",
-  description: "RenewVan landing page",
+  title: "renewvan",
+  description:
+    "Open-hardware campervan monitoring — tanks, batteries, and switches on one live dashboard.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

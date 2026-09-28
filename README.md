@@ -1,6 +1,6 @@
-# RenewVan
+# renewvan
 
-Marketing landing page for RenewVan — Next.js App Router + Tailwind v4 + shadcn/ui, deployed to Cloudflare Workers via OpenNext.
+Marketing landing page for renewvan — open-hardware campervan monitoring (tanks, batteries, switches on one live dashboard). Next.js App Router + Tailwind v4 + shadcn/ui, deployed to Cloudflare Workers via OpenNext.
 
 ## Stack
 

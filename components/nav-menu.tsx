@@ -30,16 +30,6 @@ export const NavMenu = ({
       >
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={triggerStyle}>
-            <Link href="/#why-choose-us">Why Choose Us</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={triggerStyle}>
-            <Link href="/#industries">Industries</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={triggerStyle}>
             <Link href="/#features">Features</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
@@ -50,7 +40,7 @@ export const NavMenu = ({
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={triggerStyle}>
-            <Link href="/#testimonials">Testimonials</Link>
+            <Link href="https://github.com/renewvan">GitHub</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
