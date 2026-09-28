@@ -1,22 +1,21 @@
 "use client";
 
 import {
-  ArrowRight,
   BatteryCharging,
   Droplets,
-  Gauge,
   type LucideIcon,
   MonitorSmartphone,
-  Radio,
+  Router,
+  Smartphone,
   ToggleLeft,
 } from "lucide-react";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BackgroundPattern } from "@/components/background-pattern";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-type Category = "input" | "action" | "output";
+type Category = "input" | "hub" | "output";
 
 type Step = {
   category: Category;
@@ -29,91 +28,65 @@ type Step = {
 const CATEGORY_STYLE: Record<Category, string> = {
   input:
     "bg-[color-mix(in_oklab,var(--color-sky-600)20%,var(--background))] text-sky-600 dark:bg-[color-mix(in_oklab,var(--color-sky-400)20%,var(--background))] dark:text-sky-400",
-  action:
-    "bg-[color-mix(in_oklab,var(--color-amber-600)20%,var(--background))] text-amber-600 dark:bg-[color-mix(in_oklab,var(--color-amber-400)20%,var(--background))] dark:text-amber-400",
+  hub: "bg-[color-mix(in_oklab,var(--primary)20%,var(--background))] text-primary",
   output:
     "bg-[color-mix(in_oklab,var(--color-emerald-600)20%,var(--background))] text-emerald-600 dark:bg-[color-mix(in_oklab,var(--color-emerald-400)20%,var(--background))] dark:text-emerald-400",
 };
 
-const PIPELINES: Record<string, Step[]> = {
-  tanks: [
-    {
-      category: "input",
-      icon: Droplets,
-      title: "node-tank",
-      description:
-        "ADS1115 resistive sender: voltage → resistance → level_pct, calibrated per sender.",
-      meta: "ADS1115 · calibrated",
-    },
-    {
-      category: "action",
-      icon: Radio,
-      title: "renewvan bus",
-      description:
-        "Retained MQTT publish, plus a status field (ok / open_circuit / short_circuit).",
-      meta: "renewvan/tank/<fresh|grey>/*",
-    },
-    {
-      category: "output",
-      icon: Gauge,
-      title: "Dashboard",
-      description:
-        "Radial gauge and liters-remaining readout on the kiosk touchscreen and phone app.",
-      meta: "kiosk + phone",
-    },
-  ],
-  power: [
-    {
-      category: "input",
-      icon: BatteryCharging,
-      title: "node-battery",
-      description:
-        "Remaps Victron's native Venus OS MQTT feed for the house battery bank — no new sensing.",
-      meta: "Victron Venus OS",
-    },
-    {
-      category: "action",
-      icon: Radio,
-      title: "renewvan bus",
-      description:
-        "Retained publish: state of charge, voltage, current, power, and temperature.",
-      meta: "renewvan/battery/<id>/*",
-    },
-    {
-      category: "output",
-      icon: Gauge,
-      title: "Dashboard",
-      description:
-        "SoC gauge, voltage/current/power/temperature readout, and a charge_state badge.",
-      meta: "kiosk + phone",
-    },
-  ],
-  switches: [
-    {
-      category: "input",
-      icon: ToggleLeft,
-      title: "node-relay",
-      description:
-        "ESP32 running ESPHome firmware, switching a binary on/off load like a light circuit.",
-      meta: "ESP32 · ESPHome",
-    },
-    {
-      category: "action",
-      icon: Radio,
-      title: "renewvan bus",
-      description: "Retained publish of the relay's current on/off state.",
-      meta: "renewvan/relay/<id>/state",
-    },
-    {
-      category: "output",
-      icon: MonitorSmartphone,
-      title: "Dashboard",
-      description:
-        "One row per relay with a read-only on/off indicator — no tap-to-toggle in v0.",
-      meta: "read-only",
-    },
-  ],
+const NODES: Record<string, Step> = {
+  tanks: {
+    category: "input",
+    icon: Droplets,
+    title: "node-tank",
+    description:
+      "ADS1115 resistive sender: voltage → resistance → level_pct, calibrated per sender.",
+    meta: "renewvan/tank/<fresh|grey>/*",
+  },
+  power: {
+    category: "input",
+    icon: BatteryCharging,
+    title: "node-battery",
+    description:
+      "Remaps Victron's native Venus OS MQTT feed for the house battery bank — no new sensing.",
+    meta: "renewvan/battery/<id>/*",
+  },
+  switches: {
+    category: "input",
+    icon: ToggleLeft,
+    title: "node-relay",
+    description:
+      "ESP32 running ESPHome firmware, switching a binary on/off load like a light circuit.",
+    meta: "renewvan/relay/<id>/state",
+  },
 };
+
+const HUB: Step = {
+  category: "hub",
+  icon: Router,
+  title: "renewvan hub",
+  description:
+    "A Raspberry Pi running the Mosquitto MQTT broker. Every node publishes here; every consumer reads from here — nothing talks directly to anything else.",
+  meta: "Mosquitto · retained topics",
+};
+
+const OUTPUTS: Step[] = [
+  {
+    category: "output",
+    icon: MonitorSmartphone,
+    title: "Dashboard",
+    description:
+      'One responsive app for the 7" in-van kiosk touchscreen and a laptop browser — same live view.',
+    meta: "renewvan/dashboard",
+  },
+  {
+    category: "output",
+    icon: Smartphone,
+    title: "Mobile",
+    description:
+      "Read-only phone app, checkable from outside the van without a browser.",
+    meta: "renewvan/mobile",
+  },
+];
 
 const TABS = [
   { value: "tanks", label: "Tanks" },
@@ -121,61 +94,83 @@ const TABS = [
   { value: "switches", label: "Switches" },
 ] as const;
 
-function Pipeline({ steps }: { steps: Step[] }) {
-  const [revealed, setRevealed] = useState(1);
+function NodeCard({ step, visible }: { step: Step; visible: boolean }) {
+  const Icon = step.icon;
+  return (
+    <div
+      className={cn(
+        "w-full max-w-sm rounded-xl border bg-card p-4 text-left text-card-foreground shadow-lg transition-opacity duration-500 md:w-64",
+        step.category === "hub" && "border-primary/40",
+        visible ? "opacity-100" : "opacity-30",
+      )}
+    >
+      <span
+        className={cn(
+          "mb-3 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium capitalize",
+          CATEGORY_STYLE[step.category],
+        )}
+      >
+        {step.category}
+      </span>
+      <div className="flex items-center gap-2.5 font-medium">
+        <Icon className="size-5" aria-hidden />
+        {step.title}
+      </div>
+      <p className="mt-1.5 text-sm text-muted-foreground">{step.description}</p>
+      <Badge
+        variant="outline"
+        className="mt-3 font-mono text-[11px] font-normal text-muted-foreground"
+      >
+        {step.meta}
+      </Badge>
+    </div>
+  );
+}
+
+function Pipeline({ node }: { node: Step }) {
+  const [stage, setStage] = useState(1);
 
   useEffect(() => {
-    setRevealed(1);
-    if (steps.length <= 1) return;
     const id = setInterval(() => {
-      setRevealed((n) => (n >= steps.length ? 1 : n + 1));
+      setStage((s) => (s >= 3 ? 1 : s + 1));
     }, 1400);
     return () => clearInterval(id);
-  }, [steps]);
+  }, []);
 
   return (
-    <div className="flex flex-col items-center gap-6 md:flex-row md:items-stretch md:justify-center">
-      {steps.map((step, i) => (
-        <Fragment key={step.title}>
-          <div
-            className={cn(
-              "w-full max-w-sm rounded-xl border bg-card p-4 text-left text-card-foreground shadow-lg transition-opacity duration-500 md:w-72",
-              i < revealed ? "opacity-100" : "opacity-30",
-            )}
-          >
-            <span
-              className={cn(
-                "mb-3 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium capitalize",
-                CATEGORY_STYLE[step.category],
-              )}
-            >
-              {step.category}
-            </span>
-            <div className="flex items-center gap-2.5 font-medium">
-              <step.icon className="size-5" aria-hidden />
-              {step.title}
-            </div>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              {step.description}
-            </p>
-            <Badge
-              variant="outline"
-              className="mt-3 font-mono text-[11px] font-normal text-muted-foreground"
-            >
-              {step.meta}
-            </Badge>
-          </div>
-          {i < steps.length - 1 && (
-            <ArrowRight
-              className={cn(
-                "size-5 shrink-0 rotate-90 text-muted-foreground/40 transition-opacity duration-500 md:rotate-0",
-                i < revealed ? "opacity-100" : "opacity-0",
-              )}
-              aria-hidden
-            />
+    <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-center">
+      <NodeCard step={node} visible={stage >= 1} />
+
+      <div
+        className={cn(
+          "h-8 w-0.5 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] transition-opacity duration-500 md:h-0.5 md:w-10",
+          stage >= 2 ? "opacity-100" : "opacity-0",
+        )}
+      />
+
+      <NodeCard step={HUB} visible={stage >= 2} />
+
+      <div className="flex flex-col gap-6 md:flex-row md:items-center">
+        <div
+          className={cn(
+            "h-8 w-0.5 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] transition-opacity duration-500 md:h-0.5 md:w-10",
+            stage >= 3 ? "opacity-100" : "opacity-0",
           )}
-        </Fragment>
-      ))}
+        />
+        <div
+          className={cn(
+            "flex flex-col gap-6 transition-opacity duration-500 md:border-l-2 md:border-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:pl-6",
+            stage >= 3 ? "opacity-100" : "opacity-0",
+          )}
+        >
+          {OUTPUTS.map((output) => (
+            <div key={output.title} className="relative">
+              <span className="absolute top-1/2 -left-6 hidden h-0.5 w-6 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:block" />
+              <NodeCard step={output} visible={stage >= 3} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -189,8 +184,8 @@ export function HowItWorks() {
           How it works
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-          Every sensor and switch in the van normalizes onto one MQTT bus, then
-          shows up live on the dashboard — no cloud, no polling.
+          Every sensor and switch in the van publishes to one hub. The hub is
+          the only thing anything else talks to.
         </p>
         <Tabs defaultValue="tanks" className="mt-12">
           <TabsList className="mx-auto">
@@ -202,7 +197,7 @@ export function HowItWorks() {
           </TabsList>
           {TABS.map((tab) => (
             <TabsContent key={tab.value} value={tab.value} className="pt-10">
-              <Pipeline steps={PIPELINES[tab.value]} />
+              <Pipeline node={NODES[tab.value]} />
             </TabsContent>
           ))}
         </Tabs>
