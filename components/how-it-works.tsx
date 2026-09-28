@@ -99,7 +99,8 @@ function Bracket({
               />
               <motion.span
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
                 transition={{
                   duration: 0.3,
                   ease: "easeInOut",
@@ -115,7 +116,8 @@ function Bracket({
 
       <motion.div
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.4, ease: "easeInOut", delay: delayStart }}
         style={{ transformOrigin: side === "left" ? "right" : "left" }}
         className={`h-8 w-0.5 md:h-0.5 md:w-10 ${CONNECTOR}`}
@@ -127,7 +129,8 @@ function Bracket({
             <div key={item.title} className="relative flex items-center gap-6">
               <motion.span
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
                 transition={{
                   duration: 0.3,
                   ease: "easeInOut",

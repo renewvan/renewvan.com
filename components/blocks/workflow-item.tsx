@@ -30,7 +30,7 @@ const WorkflowItem = ({
       slide={{ direction: "up", offset: 16 }}
       transition={{ duration: 0.5 }}
       delay={delay}
-      inView={false}
+      inViewMargin="-80px"
       className={cn(
         "relative z-1 w-full pt-7.5 max-md:max-w-sm md:w-64",
         className,
