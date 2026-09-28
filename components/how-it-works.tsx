@@ -71,6 +71,8 @@ const OUTPUTS: Node[] = [
 ];
 
 const STROKE = "color-mix(in oklab, var(--foreground) 20%, var(--background))";
+const STROKE_BG =
+  "bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))]";
 const CORNER_RADIUS = 14;
 
 /**
@@ -199,20 +201,35 @@ function NodeGroup({
         className="flex flex-col justify-between gap-8 md:gap-6"
       >
         {items.map((item, i) => (
-          <div
-            key={item.title}
-            ref={(el) => {
-              itemRefs.current[i] = el;
-            }}
-          >
-            <WorkflowItem
-              type={side === "left" ? "input" : "output"}
-              icon={<item.icon />}
-              title={item.title}
-              description={item.description}
-              meta={item.meta}
-              delay={side === "left" ? i * 0.15 : delayStart + 0.3 + i * 0.15}
-            />
+          <div key={item.title}>
+            <div
+              ref={(el) => {
+                itemRefs.current[i] = el;
+              }}
+            >
+              <WorkflowItem
+                type={side === "left" ? "input" : "output"}
+                icon={<item.icon />}
+                title={item.title}
+                description={item.description}
+                meta={item.meta}
+                delay={side === "left" ? i * 0.15 : delayStart + 0.3 + i * 0.15}
+              />
+            </div>
+            {i < items.length - 1 && (
+              <motion.div
+                initial={{ scaleY: 0 }}
+                whileInView={{ scaleY: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  duration: 0.3,
+                  ease: "easeInOut",
+                  delay: delayStart + i * 0.15,
+                }}
+                style={{ transformOrigin: "top" }}
+                className={`mx-auto h-8 w-0.5 md:hidden ${STROKE_BG}`}
+              />
+            )}
           </div>
         ))}
       </div>
@@ -268,8 +285,17 @@ export function HowItWorks() {
           the only thing anything else talks to.
         </p>
 
-        <div className="mt-12 flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-center">
+        <div className="mt-12 flex flex-col items-center gap-0 md:flex-row md:items-center md:justify-center">
           <NodeGroup items={INPUTS} side="left" delayStart={0.5} />
+
+          <motion.div
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.3, ease: "easeInOut", delay: 0.65 }}
+            style={{ transformOrigin: "top" }}
+            className={`h-8 w-0.5 md:hidden ${STROKE_BG}`}
+          />
 
           <WorkflowItem
             type="hub"
@@ -278,6 +304,15 @@ export function HowItWorks() {
             description={HUB.description}
             meta={HUB.meta}
             delay={0.9}
+          />
+
+          <motion.div
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.3, ease: "easeInOut", delay: 1.55 }}
+            style={{ transformOrigin: "top" }}
+            className={`h-8 w-0.5 md:hidden ${STROKE_BG}`}
           />
 
           <NodeGroup items={OUTPUTS} side="right" delayStart={1.7} />
