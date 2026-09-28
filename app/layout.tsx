@@ -35,6 +35,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* Fumadocs' own theme provider is disabled: the site-wide
+              ThemeProvider above is the single source of truth for
+              light/dark, including on /docs. Don't re-enable this. */}
           <RootProvider theme={{ enabled: false }}>{children}</RootProvider>
         </ThemeProvider>
       </body>
