@@ -9,33 +9,25 @@ import {
   Smartphone,
   ToggleLeft,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { useState } from "react";
 import { BackgroundPattern } from "@/components/background-pattern";
-import { Badge } from "@/components/ui/badge";
+import ArrowBottom from "@/components/blocks/arrow-bottom";
+import ArrowRight from "@/components/blocks/arrow-right";
+import WorkflowItem from "@/components/blocks/workflow-item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 
-type Category = "input" | "hub" | "output";
+type TabValue = "tanks" | "power" | "switches";
 
-type Step = {
-  category: Category;
+type Node = {
   icon: LucideIcon;
   title: string;
   description: string;
   meta: string;
 };
 
-const CATEGORY_STYLE: Record<Category, string> = {
-  input:
-    "bg-[color-mix(in_oklab,var(--color-sky-600)20%,var(--background))] text-sky-600 dark:bg-[color-mix(in_oklab,var(--color-sky-400)20%,var(--background))] dark:text-sky-400",
-  hub: "bg-[color-mix(in_oklab,var(--primary)20%,var(--background))] text-primary",
-  output:
-    "bg-[color-mix(in_oklab,var(--color-emerald-600)20%,var(--background))] text-emerald-600 dark:bg-[color-mix(in_oklab,var(--color-emerald-400)20%,var(--background))] dark:text-emerald-400",
-};
-
-const NODES: Record<string, Step> = {
+const NODES: Record<TabValue, Node> = {
   tanks: {
-    category: "input",
     icon: Droplets,
     title: "node-tank",
     description:
@@ -43,7 +35,6 @@ const NODES: Record<string, Step> = {
     meta: "renewvan/tank/<fresh|grey>/*",
   },
   power: {
-    category: "input",
     icon: BatteryCharging,
     title: "node-battery",
     description:
@@ -51,7 +42,6 @@ const NODES: Record<string, Step> = {
     meta: "renewvan/battery/<id>/*",
   },
   switches: {
-    category: "input",
     icon: ToggleLeft,
     title: "node-relay",
     description:
@@ -60,8 +50,7 @@ const NODES: Record<string, Step> = {
   },
 };
 
-const HUB: Step = {
-  category: "hub",
+const HUB: Node = {
   icon: Router,
   title: "renewvan hub",
   description:
@@ -69,9 +58,8 @@ const HUB: Step = {
   meta: "Mosquitto · retained topics",
 };
 
-const OUTPUTS: Step[] = [
+const OUTPUTS: Node[] = [
   {
-    category: "output",
     icon: MonitorSmartphone,
     title: "Dashboard",
     description:
@@ -79,7 +67,6 @@ const OUTPUTS: Step[] = [
     meta: "renewvan/dashboard",
   },
   {
-    category: "output",
     icon: Smartphone,
     title: "Mobile",
     description:
@@ -88,85 +75,67 @@ const OUTPUTS: Step[] = [
   },
 ];
 
-const TABS = [
+const TABS: { value: TabValue; label: string }[] = [
   { value: "tanks", label: "Tanks" },
   { value: "power", label: "Power" },
   { value: "switches", label: "Switches" },
-] as const;
+];
 
-function NodeCard({ step, visible }: { step: Step; visible: boolean }) {
-  const Icon = step.icon;
+function Pipeline({ node }: { node: Node }) {
   return (
-    <div
-      className={cn(
-        "w-full max-w-sm rounded-xl border bg-card p-4 text-left text-card-foreground shadow-lg transition-opacity duration-500 md:w-64",
-        step.category === "hub" && "border-primary/40",
-        visible ? "opacity-100" : "opacity-30",
-      )}
-    >
-      <span
-        className={cn(
-          "mb-3 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium capitalize",
-          CATEGORY_STYLE[step.category],
-        )}
+    <div className="flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-center md:gap-16">
+      <WorkflowItem
+        type="input"
+        icon={<node.icon />}
+        title={node.title}
+        description={node.description}
+        meta={node.meta}
+        delay={0}
+        className="relative"
       >
-        {step.category}
-      </span>
-      <div className="flex items-center gap-2.5 font-medium">
-        <Icon className="size-5" aria-hidden />
-        {step.title}
-      </div>
-      <p className="mt-1.5 text-sm text-muted-foreground">{step.description}</p>
-      <Badge
-        variant="outline"
-        className="mt-3 font-mono text-[11px] font-normal text-muted-foreground"
-      >
-        {step.meta}
-      </Badge>
-    </div>
-  );
-}
+        <ArrowRight delay={0.5} />
+        <ArrowBottom delay={0.5} />
+      </WorkflowItem>
 
-function Pipeline({ node }: { node: Step }) {
-  const [stage, setStage] = useState(1);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setStage((s) => (s >= 3 ? 1 : s + 1));
-    }, 1400);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="flex flex-col items-center gap-6 md:flex-row md:items-center md:justify-center">
-      <NodeCard step={node} visible={stage >= 1} />
-
-      <div
-        className={cn(
-          "h-8 w-0.5 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] transition-opacity duration-500 md:h-0.5 md:w-10",
-          stage >= 2 ? "opacity-100" : "opacity-0",
-        )}
+      <WorkflowItem
+        type="hub"
+        icon={<HUB.icon />}
+        title={HUB.title}
+        description={HUB.description}
+        meta={HUB.meta}
+        delay={0.9}
+        className="relative"
       />
 
-      <NodeCard step={HUB} visible={stage >= 2} />
-
-      <div className="flex flex-col gap-6 md:flex-row md:items-center">
-        <div
-          className={cn(
-            "h-8 w-0.5 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] transition-opacity duration-500 md:h-0.5 md:w-10",
-            stage >= 3 ? "opacity-100" : "opacity-0",
-          )}
+      <div className="flex flex-col items-center gap-8 md:flex-row md:items-center">
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.4, ease: "easeInOut", delay: 1.5 }}
+          style={{ transformOrigin: "left" }}
+          className="h-8 w-0.5 origin-top bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:h-0.5 md:w-10"
         />
-        <div
-          className={cn(
-            "flex flex-col gap-6 transition-opacity duration-500 md:border-l-2 md:border-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:pl-6",
-            stage >= 3 ? "opacity-100" : "opacity-0",
-          )}
-        >
-          {OUTPUTS.map((output) => (
-            <div key={output.title} className="relative">
-              <span className="absolute top-1/2 -left-6 hidden h-0.5 w-6 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:block" />
-              <NodeCard step={output} visible={stage >= 3} />
+        <div className="flex flex-col gap-8 md:gap-6">
+          {OUTPUTS.map((output, i) => (
+            <div
+              key={output.title}
+              className="relative flex items-center gap-6"
+            >
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.3, ease: "easeInOut", delay: 1.7 }}
+                style={{ transformOrigin: "left" }}
+                className="hidden h-0.5 w-6 bg-[color-mix(in_oklab,var(--foreground)20%,var(--background))] md:block"
+              />
+              <WorkflowItem
+                type="output"
+                icon={<output.icon />}
+                title={output.title}
+                description={output.description}
+                meta={output.meta}
+                delay={1.9 + i * 0.15}
+              />
             </div>
           ))}
         </div>
@@ -176,6 +145,8 @@ function Pipeline({ node }: { node: Step }) {
 }
 
 export function HowItWorks() {
+  const [active, setActive] = useState<TabValue>("tanks");
+
   return (
     <section id="features" className="relative py-24">
       <BackgroundPattern />
@@ -187,7 +158,11 @@ export function HowItWorks() {
           Every sensor and switch in the van publishes to one hub. The hub is
           the only thing anything else talks to.
         </p>
-        <Tabs defaultValue="tanks" className="mt-12">
+        <Tabs
+          value={active}
+          onValueChange={(value) => setActive(value as TabValue)}
+          className="mt-12"
+        >
           <TabsList className="mx-auto">
             {TABS.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value}>
@@ -195,11 +170,9 @@ export function HowItWorks() {
               </TabsTrigger>
             ))}
           </TabsList>
-          {TABS.map((tab) => (
-            <TabsContent key={tab.value} value={tab.value} className="pt-10">
-              <Pipeline node={NODES[tab.value]} />
-            </TabsContent>
-          ))}
+          <TabsContent value={active} className="pt-10">
+            <Pipeline key={active} node={NODES[active]} />
+          </TabsContent>
         </Tabs>
       </div>
     </section>
