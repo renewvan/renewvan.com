@@ -84,11 +84,11 @@ function Bracket({
   const stubDelay = delayStart + 0.1;
 
   return (
-    <div className="flex flex-col items-center gap-8 md:flex-row md:items-center">
+    <div className="flex flex-col items-center gap-0 md:flex-row md:items-center">
       {side === "left" && (
         <div className="flex flex-col gap-8 md:gap-6">
           {items.map((item, i) => (
-            <div key={item.title} className="relative flex items-center gap-6">
+            <div key={item.title} className="relative flex items-center gap-0">
               <WorkflowItem
                 type="input"
                 icon={<item.icon />}
@@ -126,7 +126,7 @@ function Bracket({
       {side === "right" && (
         <div className="flex flex-col gap-8 md:gap-6">
           {items.map((item, i) => (
-            <div key={item.title} className="relative flex items-center gap-6">
+            <div key={item.title} className="relative flex items-center gap-0">
               <motion.span
                 initial={{ scaleX: 0 }}
                 whileInView={{ scaleX: 1 }}
@@ -168,7 +168,7 @@ export function HowItWorks() {
           the only thing anything else talks to.
         </p>
 
-        <div className="mt-12 flex flex-col items-center gap-8 md:flex-row md:items-center md:justify-center">
+        <div className="mt-12 flex flex-col items-center gap-0 md:flex-row md:items-center md:justify-center">
           <Bracket items={INPUTS} side="left" delayStart={0.5} />
 
           <WorkflowItem
