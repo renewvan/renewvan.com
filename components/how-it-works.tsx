@@ -24,21 +24,21 @@ type Node = {
 const INPUTS: Node[] = [
   {
     icon: Droplets,
-    title: "node-tank",
+    title: "tank",
     description:
       "ADS1115 resistive sender: voltage → resistance → level_pct, calibrated per sender.",
     meta: "renewvan/tank/<fresh|grey>/*",
   },
   {
     icon: BatteryCharging,
-    title: "node-battery",
+    title: "battery",
     description:
       "Remaps Victron's native Venus OS MQTT feed for the house battery bank — no new sensing.",
     meta: "renewvan/battery/<id>/*",
   },
   {
     icon: ToggleLeft,
-    title: "node-relay",
+    title: "relay",
     description:
       "ESP32 running ESPHome firmware, switching a binary on/off load like a light circuit.",
     meta: "renewvan/relay/<id>/state",
@@ -47,10 +47,10 @@ const INPUTS: Node[] = [
 
 const HUB: Node = {
   icon: Router,
-  title: "renewvan hub",
+  title: "renewvan",
   description:
     "A Raspberry Pi running the Mosquitto MQTT broker. Every node publishes here; every consumer reads from here — nothing talks directly to anything else.",
-  meta: "Mosquitto · retained topics",
+  meta: "MQTT",
 };
 
 const OUTPUTS: Node[] = [
