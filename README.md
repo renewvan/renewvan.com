@@ -17,7 +17,7 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3030](http://localhost:3030) (default dev port is `3030`, not Next's usual `3000`).
 
 ## Linting & formatting
 
@@ -46,5 +46,5 @@ pnpm dlx shadcn@latest add <component>
 ## Project layout
 
 - `app/` — routes, layout, global styles
-- `components/` — page sections (`hero.tsx`, `navbar.tsx`, `logo.tsx`, `background-pattern.tsx`, `nav-menu.tsx`) and `components/ui/` (shadcn primitives)
+- `components/` — page sections (`hero.tsx`, `navbar.tsx`, `logo.tsx`, `background-pattern.tsx`, `nav-menu.tsx`, `how-it-works.tsx`) and `components/ui/` (shadcn primitives)
 - `lib/utils.ts` — `cn()` class-merge helper
