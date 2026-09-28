@@ -64,8 +64,7 @@ const OUTPUTS: Node[] = [
   {
     icon: Smartphone,
     title: "Mobile",
-    description:
-      "Same live view on your phone — read-only, no browser required, works from outside the van.",
+    description: "Same live view on your phone, works from outside the van.",
     meta: "renewvan/mobile",
   },
 ];

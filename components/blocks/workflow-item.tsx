@@ -40,11 +40,11 @@ const WorkflowItem = ({
         className={cn(
           "absolute top-0 left-0 -z-1 flex items-center gap-2.5 rounded-t-xl p-4 pt-1.5 capitalize",
           {
-            "bg-[color-mix(in_oklab,var(--color-amber-600)20%,var(--background))] text-amber-600 dark:bg-[color-mix(in_oklab,var(--color-amber-400)20%,var(--background))] dark:text-amber-400":
+            "bg-[color-mix(in_oklab,var(--color-green-600)20%,var(--background))] text-green-600 dark:bg-[color-mix(in_oklab,var(--color-green-400)20%,var(--background))] dark:text-green-400":
               type === "input",
             "bg-[color-mix(in_oklab,var(--primary)20%,var(--background))] text-primary":
               type === "hub",
-            "bg-[color-mix(in_oklab,var(--color-green-600)20%,var(--background))] text-green-600 dark:bg-[color-mix(in_oklab,var(--color-green-400)20%,var(--background))] dark:text-green-400":
+            "bg-[color-mix(in_oklab,var(--color-amber-600)20%,var(--background))] text-amber-600 dark:bg-[color-mix(in_oklab,var(--color-amber-400)20%,var(--background))] dark:text-amber-400":
               type === "output",
           },
         )}
