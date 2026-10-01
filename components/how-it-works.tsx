@@ -50,7 +50,7 @@ const HUB: Node = {
   title: "renewvan",
   description:
     "A Raspberry Pi running the Mosquitto MQTT broker. Every node publishes here; every consumer reads from here — nothing talks directly to anything else.",
-  meta: "MQTT",
+  meta: "renewvan/hub",
 };
 
 const OUTPUTS: Node[] = [
