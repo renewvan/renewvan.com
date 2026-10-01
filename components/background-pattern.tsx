@@ -1,7 +1,7 @@
-export function BackgroundPattern() {
+export function BackgroundPattern({ className }: { className?: string }) {
   return (
     <div
-      className="absolute inset-0 -z-1"
+      className={`absolute inset-0 -z-1 ${className ?? ""}`}
       style={{
         backgroundImage: `
         linear-gradient(to right, var(--border) 1px, transparent 1px),
