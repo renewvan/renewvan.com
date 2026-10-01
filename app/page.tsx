@@ -9,7 +9,7 @@ export default function Home() {
       <div className="relative bg-primary/4">
         <Navbar />
         <Hero />
-        <BackgroundPattern />
+        <BackgroundPattern className="opacity-30 dark:opacity-100" />
       </div>
       <HowItWorks />
     </div>
